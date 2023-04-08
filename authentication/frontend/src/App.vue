@@ -1,47 +1,94 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+<script>
+
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
+
+export default {
+    data() {
+        return {
+            isAuthenticated: false,
+            sessionUsername: "",
+        }
+    },
+
+    created() {
+        this.getSession();
+    },
+
+    methods: {
+        getSession() {
+            fetch("/api/session/", {
+                "credentials": "same-origin",
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                this.isAuthenticated = data.isAuthenticated;
+                if (this.isAuthenticated) {
+                    this.getWhoAmI();
+                }
+            })
+            .catch((err) => console.log(err));
+        },
+
+        login() {
+            const username = this.username;
+            const password = this.password;
+
+            fetch("/api/login/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": cookies.get("csrftoken"),
+                },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            })
+            .then((response) => {
+                this.getSession();
+            })
+            .catch((err) => console.log(err));
+        },
+
+        logout() {
+            fetch("/api/logout", {
+                credentials: "same-origin",
+            })
+            .then((response) => {
+                this.getSession();
+            })
+            .catch((err) => console.log(err));
+        },
+
+        getWhoAmI() {
+            fetch("/api/whoami/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "same-origin",
+            })
+            .then((response) => response.json())
+            .then((data) => this.sessionUsername = data.username)
+            .catch((err) => console.log(err));
+        },
+    }
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div v-if="isAuthenticated">
+        You are logged in as {{ sessionUsername }}!<br>
+        <button v-on:click="logout">Logout</button><br>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+    <div v-else>
+        <form @submit.prevent="login">
+            Username: <input label="username" v-model="username" placeholder="username" required><br>
+            Password: <input label="password" v-model="password" type="password" required><br>
+            <button>Login</button>
+        </form>
+    </div>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
