@@ -6,6 +6,10 @@ from django.middleware.csrf import get_token
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+
 
 def get_csrf(request):
     response = JsonResponse({'detail': 'CSRF cookie set'})
@@ -74,3 +78,21 @@ def whoami_view(request):
         return JsonResponse({
             'isAuthenticated': False
         })
+
+
+class SessionView(APIView):
+    authentication_classes = [TokenAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def get(request, format=None):
+        return JsonResponse({'isAuthenticated': True})
+
+
+class WhoAmIView(APIView):
+    authentication_classes = [TokenAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def get(request, format=None):
+        return JsonResponse({'username': request.user.username})
