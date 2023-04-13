@@ -69,6 +69,11 @@ const routerPages = {
     urlContainer: '/container/login.html',
     jsFiles: ['/src/login.js'],
   },
+  helloworld: {
+    title: 'Hello World!',
+    urlIndex: 'helloworld',
+    urlContainer: '/container/helloworld.html',
+  },
 };
 
 const routerConfig = {
