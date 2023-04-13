@@ -2,35 +2,25 @@
 
 // Router class that manages all pages.
 class Router {
-  constructor(pages) {
-    // Do nothing (yet).
+  constructor(pages, config) {
+    this.pages = pages;
+    this.rootURL = config['rootURL'];
+    this.elementHTMLContainer = config['elementHTMLContainer'];
   }
 
-  navigate(path) {
-    var pages = {
-      'login': {
-        'urlContainer': '/container/login.html',
-        'title': 'Login page',
-        'urlIndex': 'login',
-        'jsFiles': ['/src/login.js'],
-      }
-    };
-
-    const elementHTMLContainer = 'mainContainer';
-
-    if (path in pages) {
-      const page = pages[path];
+  navigate(pageName) {
+    if (pageName in this.pages) {
+      const page = this.pages[pageName];
 
       fetch(page.urlContainer)
         .then((response) => response.text())
         .then((body) => {
-          const container = document.getElementById(elementHTMLContainer);
-
+          const container = document.getElementById(this.elementHTMLContainer);
           container.innerHTML = body;
 
           if ('jsFiles' in page) {
             page.jsFiles.forEach((file) => {
-              var jsScript = document.createElement('script');
+              const jsScript = document.createElement('script');
               jsScript.type = 'text/javascript';
               jsScript.src = file;
               container.appendChild(jsScript);
@@ -46,11 +36,15 @@ class Router {
             });
           }
 
-          window.history.pushState({path}, page.title, 'index.html' + window.location.search + '#' + page.urlIndex);
+          window.history.pushState(
+            {pageName},
+            page.title,
+            this.rootURL + window.location.search + '#' + page.urlIndex
+          );
         })
         .catch((error) => console.log("Error", error));
     } else {
-      console.log(`Error loading path ${path}`);
+      console.log(`Error loading page ${pageName}`);
     }
   }
 }
@@ -67,6 +61,20 @@ window.addEventListener('hashchange', () => {
   console.log('Hash changed', window.location.hash);
 });
 
-const router = new Router({});
+
+const router = new Router(
+  {
+    login: {
+      title: 'Login page',
+      urlIndex: 'login',
+      urlContainer: '/container/login.html',
+      jsFiles: ['/src/login.js'],
+    },
+  },
+  {
+    rootURL: 'index.html',
+    elementHTMLContainer: 'mainContainer',
+  }
+);
 
 router.navigate('login');
