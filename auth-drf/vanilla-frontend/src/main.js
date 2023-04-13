@@ -62,19 +62,20 @@ window.addEventListener('hashchange', () => {
 });
 
 
-const router = new Router(
-  {
-    login: {
-      title: 'Login page',
-      urlIndex: 'login',
-      urlContainer: '/container/login.html',
-      jsFiles: ['/src/login.js'],
-    },
+const routerPages = {
+  login: {
+    title: 'Login page',
+    urlIndex: 'login',
+    urlContainer: '/container/login.html',
+    jsFiles: ['/src/login.js'],
   },
-  {
-    rootURL: 'index.html',
-    elementHTMLContainer: 'mainContainer',
-  }
-);
+};
+
+const routerConfig = {
+  rootURL: 'index.html',
+  elementHTMLContainer: 'mainContainer',
+};
+
+const router = new Router(routerPages, routerConfig);
 
 router.navigate('login');
