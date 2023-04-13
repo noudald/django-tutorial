@@ -55,6 +55,17 @@ class Router {
   }
 }
 
+// Example how to get current values from url.
+const hashValue = window.location.hash.substring(1);
+const searchValue = window.location.search;
+const searchParams = new URLSearchParams(searchValue);
+
+console.log(hashValue);
+console.log(searchParams);
+
+window.addEventListener('hashchange', () => {
+  console.log('Hash changed', window.location.hash);
+});
 
 const router = new Router({});
 
