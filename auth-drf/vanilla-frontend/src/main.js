@@ -2,6 +2,7 @@
 
 import { Router } from './router.js';
 
+
 // Example how to get current values from url.
 const hashValue = window.location.hash.substring(1);
 const searchValue = window.location.search;

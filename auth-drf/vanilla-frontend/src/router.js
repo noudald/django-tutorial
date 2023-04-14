@@ -39,14 +39,6 @@ export class Router {
               container.appendChild(cssLink);
             });
           }
-
-          // TODO: Window history doesn't work properly. Back and forward
-          //       don't always work.
-          window.history.pushState(
-            {pageName},
-            page.title,
-            this.rootURL + window.location.search + '#' + page.urlIndex
-          );
         })
         .catch((error) => console.log("Error", error));
     } else {
