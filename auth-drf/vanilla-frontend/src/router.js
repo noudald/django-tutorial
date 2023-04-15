@@ -19,7 +19,7 @@ export class Router {
       fetch(page.urlContainer)
         .then((response) => response.text())
         .then((body) => {
-          const container = document.getElementById(this.elementHTMLContainer);
+          const container = document.querySelector(`#${this.elementHTMLContainer}`);
           container.innerHTML = body;
 
           if ('jsFiles' in page) {
