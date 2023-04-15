@@ -63,3 +63,6 @@ router.navigate('login');
 
 
 const navBar = new NavBar(routerPages, { elementHTMLNavBar: 'navbar' });
+
+console.log('main', globalVars);
+globalVars['testVariable'] = 'Changed variable in main';
