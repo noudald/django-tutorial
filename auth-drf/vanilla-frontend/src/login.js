@@ -9,38 +9,19 @@ document
     const username = document.querySelector('#inputUsername');
     const password = document.querySelector('#inputPassword');
 
-    fetch('http://localhost:8000/api/auth/login/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: username.value,
-        password: password.value
-      })
-    })
-      .then((response) => {
-        console.log(response);
-        if (response.status == 200) {
-          return response.json();
-        } else {
-          throw new Error('Could not log in with provided credentials.');
+    globalVars.authenticator
+      .logIn(username.value.trim(), password.value.trim())
+      .then((result) => {
+        if (result.status) {
+          window.location.hash = '#helloworld';
         }
-      })
-      .then((data) => {
-        console.log('Logged in!', data);
+        globalVars.authenticator.whoAmI()
+          .then((result) => console.log(result));
+      });
 
-        globalVars.isAuthenticated = true;
-        globalVars['token'] = data.token;
-        globalVars['expiry'] = data.expiry;
-
-        window.location.hash = '#helloworld';
-      })
-      .catch((error) => console.log('Error', error));
 
     username.value = '';
     password.value = '';
-
   });
 
 document
