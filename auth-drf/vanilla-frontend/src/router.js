@@ -16,6 +16,12 @@ export class Router {
     if (pageName in this.pages) {
       const page = this.pages[pageName];
 
+      if (page.needAuthentication && (sessionStorage.getItem('isAuthenticated') === 'false')) {
+        const container = document.querySelector(`#${this.elementHTMLContainer}`);
+        container.innerHTML = '<p>Needs authentication to watch this page!</p>';
+        return false;
+      }
+
       fetch(page.urlContainer)
         .then((response) => response.text())
         .then((body) => {
