@@ -3,6 +3,7 @@ from django.contrib.auth import login
 
 from rest_framework import generics, permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.response import Response
 
 from knox.views import LoginView as KnoxLoginView
 from knox.auth import TokenAuthentication
@@ -36,3 +37,12 @@ class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+class WhoAmI(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def post(self, request, format=None):
+        return Response({
+            'username': request.user.username,
+            'email': request.user.email
+        })
