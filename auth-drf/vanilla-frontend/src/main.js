@@ -15,6 +15,7 @@ const routerPages = {
   helloworld: {
     title: 'Hello World!',
     urlContainer: '/container/helloworld.html',
+    jsFiles: ['/src/helloworld.js'],
     needAuthentication: true,
   },
 };
