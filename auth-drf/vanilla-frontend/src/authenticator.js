@@ -133,7 +133,33 @@ export class Authenticator {
       });
   }
 
-  logOut() {
+  async logOut() {
+    return fetch('http://localhost:8000/api/auth/logout/', {
+      method: 'POST',
+      headers: this.#getHeader(),
+    })
+      .then((response) => {
+        if (response.status == 204) {
+          this.isAuthenticated = false;
+          this.token = '';
+          this.expiry = '';
 
+          return {
+            'status': true,
+            'message': 'Succesfully logged out.',
+          };
+        } else {
+          return {
+            'status': false,
+            'message': 'Failed to log out.'
+          }
+        }
+      })
+      .catch((error) => {
+        return {
+          'status': false,
+          'message': err
+        };
+      });
   }
 }
