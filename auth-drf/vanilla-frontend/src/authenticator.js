@@ -5,6 +5,22 @@ export class Authenticator {
     this.isAuthenticated = false;
     this.token = '';
     this.expiry = '';
+
+    this.username = null;
+    this.email = null;
+  }
+
+  #getHeader() {
+    if (this.isAuthenticated) {
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${this.token}`,
+      };
+    } else {
+      return {
+        'Content-Type': 'application/json',
+      };
+    }
   }
 
   amIAuthenticated() {
@@ -35,12 +51,24 @@ export class Authenticator {
   }
 
   async whoAmI() {
+    if (!this.amIAuthenticated()) {
+      return {
+        'status': false,
+        'message': 'You are not authenticated',
+      }
+    }
+
+    if (this.username) {
+      return {
+        'status': true,
+        'message': 'Succesfully figured out who I am',
+        'username': this.username
+      };
+    }
+
     return fetch('http://localhost:8000/api/auth/whoami/', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Token ${this.token}`,
-      },
+      headers: this.#getHeader(),
     })
       .then((response) => {
         console.log(response);
@@ -51,6 +79,8 @@ export class Authenticator {
         }
       })
       .then((data) => {
+        this.username = data.username;
+        this.email = data.email;
         return {
           'status': true,
           'message': 'Succesfully figured out who I am',
@@ -69,9 +99,7 @@ export class Authenticator {
   async logIn(username, password) {
     return fetch('http://localhost:8000/api/auth/login/', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: this.#getHeader(),
       body: JSON.stringify({
         username: username,
         password: password
