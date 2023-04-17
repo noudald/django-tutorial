@@ -1,4 +1,4 @@
-<form id="formLogin">
+<form id="formLogin" style="display: none">
     <table>
         <tr>
             <th><label>Username:</label></th>
@@ -10,6 +10,12 @@
         </tr>
         <tr>
             <th><input id="inputLogin" type="submit" value="Login"></th>
+            <th><p id="loginErrorMessage"></p></th>
         </tr>
     </table>
+</form>
+
+<form id="formLogout" style="display: none">
+    <p id="welcomeMessage"></p>
+    <input id="logoutButton" type="submit" value="Logout">
 </form>
