@@ -5,6 +5,7 @@ export class Router {
     this.pages = pages;
     this.rootURL = config['rootURL'];
     this.elementHTMLContainer = config['elementHTMLContainer'];
+    this.authenticator = config.authenticator;
 
     window.addEventListener('hashchange', () => {
       console.log('Hash changed', window.location.hash);
@@ -16,7 +17,7 @@ export class Router {
     if (pageName in this.pages) {
       const page = this.pages[pageName];
 
-      if (page.needAuthentication && (sessionStorage.getItem('isAuthenticated') === 'false')) {
+      if (page.needAuthentication && !this.authenticator.amIAuthenticated()) {
         const container = document.querySelector(`#${this.elementHTMLContainer}`);
         container.innerHTML = '<p>Needs authentication to watch this page!</p>';
         return false;
