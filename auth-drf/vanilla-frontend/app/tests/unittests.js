@@ -1,109 +1,4 @@
-class UnitTests {
-  constructor(testSuites) {
-    this.testSuites = testSuites;
-  }
-
-  addTest(testName, testFunction) {
-    this.tests.push({
-      testName: testName,
-      testFunction: testFunction
-    });
-  }
-
-  raiseError(msg) {
-    throw new Error(msg);
-  }
-
-  assertTrue(expression, msg = null) {
-    if (!(expression)) {
-      if (msg) {
-        throw new Error(`"${msg}" failed`);
-      } else {
-        throw new Error('assertTrue failed');
-      }
-    }
-  }
-
-  assertEqual(value1, value2, msg = null) {
-    if (value1 != value2) {
-      if (msg) {
-        throw new Error(`"${msg}" failed`);
-      } else {
-        throw new Error('assertEqual failed');
-      }
-    }
-  }
-
-  log(message, logClass = 'log') {
-    const logElement = document.querySelector(`.${logClass}`);
-
-    const time = new Date();
-    const timeString = time.toLocaleTimeString();
-
-    logElement.innerHTML += `${timeString}: ${message}<br/>`;
-  }
-
-  updateReport(numberOfTests, numberOfPasses, numberOfFails) {
-    const reportDiv = document.querySelector('.report');
-    reportDiv.innerHTML = `
-    <p>
-      <h2>Report</h2>
-      <table>
-        <tr>
-          <th>Total number of tests:</th><th>${numberOfTests}</th>
-        </tr>
-        <tr>
-          <th>Number of passed tests:</th><th>${numberOfPasses}</th>
-        </tr>
-        <tr>
-          <th>Number of failed tests:</th><th>${numberOfFails}</th>
-        </tr>
-      </table>
-    </p>`;
-  }
-
-  runTests() {
-    document.addEventListener('DOMContentLoaded', () => {
-      var numberOfTests = 0;
-      var numberOfPasses = 0;
-      var numberOfFails = 0;
-
-      this.updateReport(numberOfTests, numberOfPasses, numberOfFails);
-
-      this.testSuites.forEach((testSuiteName) => {
-        const logElement = document.querySelector('.log');
-        const currentLogClass = `${testSuiteName}Log`;
-        logElement.innerHTML += `
-          <h2>TestSuite ${testSuiteName}</h2>
-          <div class="${currentLogClass}"></div>`;
-
-        Object.getOwnPropertyNames(Object.getPrototypeOf(this))
-          .filter((methodName) => methodName.startsWith(testSuiteName))
-          .forEach(async (testName) => {
-            await setTimeout(() => {
-              numberOfTests++;
-              try {
-                this[testName]();
-                numberOfPasses++;
-                this.log(
-                  `${testName}...<span class="passed">passed</span>`,
-                  currentLogClass
-                );
-              } catch (error) {
-                numberOfFails++;
-                this.log(
-                  `${testName}...<span class="failed">failed (${error})</span>`,
-                  currentLogClass
-                );
-              }
-              this.updateReport(numberOfTests, numberOfPasses, numberOfFails);
-            }, 0);
-          });
-      });
-    });
-  }
-}
-
+import { UnitTests } from '/libs/unittests.js';
 
 function sleep(milliseconds) {
   const date = Date.now();
@@ -147,5 +42,9 @@ class TestSuite extends UnitTests {
 }
 
 
-const testSuite = new TestSuite(['testSuite', 'testServer']);
+const testSuite = new TestSuite({
+  testNames: ['testSuite', 'testServer'],
+  reportClass: 'reportTestSuite',
+  logClass: 'logTestSuite',
+});
 testSuite.runTests()
