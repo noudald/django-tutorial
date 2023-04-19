@@ -46,6 +46,15 @@ export class Router {
               container.appendChild(cssLink);
             });
           }
+
+          if ('moduleFiles' in page) {
+            page.moduleFiles.forEach((file) => {
+              const moduleScript = document.createElement('script');
+              moduleScript.type = 'module';
+              moduleScript.src = file;
+              container.appendChild(moduleScript);
+            });
+          }
         })
         .catch((error) => console.log("Error", error));
     } else {
