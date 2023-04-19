@@ -1,0 +1,11 @@
+th {
+    text-align: left;
+}
+
+.failed {
+    color: #ff0000;
+}
+
+.passed {
+    color: #00ff00;
+}

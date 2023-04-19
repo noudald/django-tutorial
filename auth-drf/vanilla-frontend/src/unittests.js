@@ -17,7 +17,7 @@ class UnitTests {
   assertTrue(expression, msg = null) {
     if (!(expression)) {
       if (msg) {
-        throw new Error(`${msg} failed`);
+        throw new Error(`"${msg}" failed`);
       } else {
         throw new Error('assertTrue failed');
       }
@@ -27,15 +27,15 @@ class UnitTests {
   assertEqual(value1, value2, msg = null) {
     if (value1 != value2) {
       if (msg) {
-        throw new Error(`${msg} failed`);
+        throw new Error(`"${msg}" failed`);
       } else {
         throw new Error('assertEqual failed');
       }
     }
   }
 
-  log(message) {
-    const logElement = document.querySelector('.log');
+  log(message, logClass = 'log') {
+    const logElement = document.querySelector(`.${logClass}`);
 
     const time = new Date();
     const timeString = time.toLocaleTimeString();
@@ -47,6 +47,7 @@ class UnitTests {
     const reportDiv = document.querySelector('.report');
     reportDiv.innerHTML = `
     <p>
+      <h2>Report</h2>
       <table>
         <tr>
           <th>Total number of tests:</th><th>${numberOfTests}</th>
@@ -68,22 +69,32 @@ class UnitTests {
       var numberOfFails = 0;
 
       this.updateReport(numberOfTests, numberOfPasses, numberOfFails);
+
       this.testSuites.forEach((testSuiteName) => {
         const logElement = document.querySelector('.log');
-        logElement.innerHTML += `<h1>TestSuite ${testSuiteName}`;
+        const currentLogClass = `${testSuiteName}Log`;
+        logElement.innerHTML += `
+          <h2>TestSuite ${testSuiteName}</h2>
+          <div class="${currentLogClass}"></div>`;
 
         Object.getOwnPropertyNames(Object.getPrototypeOf(this))
           .filter((methodName) => methodName.startsWith(testSuiteName))
-          .forEach((testName) => {
-            setTimeout(() => {
+          .forEach(async (testName) => {
+            await setTimeout(() => {
               numberOfTests++;
               try {
                 this[testName]();
                 numberOfPasses++;
-                this.log(`${testName}...<span style="color: #00ff00">passed</span>`);
+                this.log(
+                  `${testName}...<span class="passed">passed</span>`,
+                  currentLogClass
+                );
               } catch (error) {
                 numberOfFails++;
-                this.log(`${testName}...<span style="color: #ff0000">failed (${error})</span>`);
+                this.log(
+                  `${testName}...<span class="failed">failed (${error})</span>`,
+                  currentLogClass
+                );
               }
               this.updateReport(numberOfTests, numberOfPasses, numberOfFails);
             }, 0);
@@ -93,6 +104,7 @@ class UnitTests {
   }
 }
 
+
 function sleep(milliseconds) {
   const date = Date.now();
   let currentDate = null;
@@ -101,19 +113,20 @@ function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 }
 
+
 class TestSuite extends UnitTests {
-  testSuiteSimpleTest() {
+  testSuiteSimpleTest1() {
     sleep(500);
     this.assertTrue(1 + 1 === 3);
   }
 
   testSuiteSimpleTest2() {
-    sleep(500);
+    sleep(250);
     this.assertTrue(2 * 2 === 4);
   }
 
   testSuiteSimpleTest3() {
-    sleep(500);
+    sleep(250);
     this.assertTrue(2 * 2 === 4);
   }
 
@@ -132,6 +145,7 @@ class TestSuite extends UnitTests {
     img.src = server_url + '/static/ping.png';
   }
 }
+
 
 const testSuite = new TestSuite(['testSuite', 'testServer']);
 testSuite.runTests()
