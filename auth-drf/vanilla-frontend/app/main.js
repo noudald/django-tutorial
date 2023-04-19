@@ -1,8 +1,8 @@
 /* Main javascript file. */
 
-import { Router } from './router.js';
-import { NavBar } from './navbar.js';
-import { Authenticator } from './authenticator.js';
+import { Router } from '/libs/router.js';
+import { NavBar } from '/libs/navbar.js';
+import { Authenticator } from '/libs/authenticator.js';
 
 
 const authenticator = new Authenticator();
@@ -12,20 +12,20 @@ globalVars['authenticator'] = authenticator;
 const routerPages = {
   login: {
     title: 'Login page',
-    urlContainer: '/container/login.html',
-    jsFiles: ['/src/login.js'],
+    urlContainer: '/app/login/login.html',
+    jsFiles: ['/app/login/login.js'],
     needAuthentication: false,
   },
   helloworld: {
     title: 'Hello World!',
-    urlContainer: '/container/helloworld.html',
-    jsFiles: ['/src/helloworld.js'],
+    urlContainer: '/app/helloworld/helloworld.html',
+    jsFiles: ['/app/helloworld/helloworld.js'],
     needAuthentication: true,
   },
   table: {
     title: 'Dynamic Table',
-    urlContainer: '/container/table.html',
-    jsFiles: ['/src/table.js'],
+    urlContainer: '/app/table/table.html',
+    jsFiles: ['/app/table/table.js'],
     needAuthentication: false,
   }
 };
