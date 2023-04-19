@@ -22,6 +22,12 @@ const routerPages = {
     jsFiles: ['/src/helloworld.js'],
     needAuthentication: true,
   },
+  table: {
+    title: 'Dynamic Table',
+    urlContainer: '/container/table.html',
+    jsFiles: ['/src/table.js'],
+    needAuthentication: false,
+  }
 };
 
 const routerConfig = {
