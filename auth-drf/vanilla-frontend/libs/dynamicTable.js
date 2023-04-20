@@ -1,33 +1,12 @@
 export class DynamicTable {
-  constructor(tableDict) {
-    this.rowSize = 0;
-    this.colSize = 0;
-    this.columns = [];
-    this.rows = [];
-    this.index = []
-    this.sortOn = null;
+  constructor({ columns, rows }) {
+    this.columns = columns;
+    this.rows = rows;
 
-    for (let key in tableDict) {
-      this.columns.push(key);
-      if (this.colSize > 0) {
-        if (this.rowSize != tableDict[key].length) {
-          throw new RuntimeError('Sizes of columns should be the same');
-        }
-      } else {
-        this.rowSize = tableDict[key].length;
-      }
-      this.colSize++;
-    }
+    this.colSize = this.columns.length;
+    this.rowSize = this.rows.length;
 
-    for (var i = 0; i < this.rowSize; i++) {
-      const row = [];
-      for (let key in tableDict) {
-        row.push(tableDict[key][i]);
-      }
-      this.rows.push(row);
-
-      this.index.push(i);
-    }
+    this.index = [...Array(this.rowSize).keys()];
   }
 
   constructTable(divClass) {
@@ -56,9 +35,10 @@ export class DynamicTable {
       tableTd.innerHTML = i;
       tableTr.appendChild(tableTd);
 
-      this.rows[i].forEach((elm) => {
+      const row = this.rows[i];
+      this.columns.forEach((col) => {
         const tableTd = document.createElement('td');
-        tableTd.innerHTML = elm;
+        tableTd.innerHTML = row[col];
         tableTd.contentEditable = 'true';
         tableTr.appendChild(tableTd);
       });
@@ -137,29 +117,16 @@ export class DynamicTable {
           }
 
         }
-
-
-        // if (anchorOffset == 0) {
-        //   console.log('Move to left entry');
-        // } else if (anchorOffset == textLength) {
-        //   console.log('Move to right entry');
-        // }
-
-        // console.log(selection);
-        // console.log(range);
-        // console.log(td, td.textContent);
-
-        // range.setStart(td, td.textContent.length);
-        // range.setEnd(td, td.textContent.length);
       });
 
       td.addEventListener('focusout', (e) => {
         const currentTr = td.parentNode;
         const currentColumnIndex = Array.from(currentTr.children).indexOf(td);
+        const currentColumn = this.columns[currentColumnIndex - 1];
         const currentTable = currentTr.parentNode;
         const currentRowIndex = Array.from(currentTable.children).indexOf(currentTr);
 
-        this.rows[currentRowIndex - 1][currentColumnIndex - 1] = td.innerHTML;
+        this.rows[currentRowIndex - 1][currentColumn] = td.innerHTML;
       });
     });
   }
