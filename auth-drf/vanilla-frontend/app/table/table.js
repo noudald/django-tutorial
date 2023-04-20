@@ -1,7 +1,8 @@
 if (!('dynamicTable' in globalVars)) {
   import('/libs/dynamicTable.js')
     .then((mod) => {
-      globalVars['dynamicTable'] = new mod.DynamicTable({
+      const DynamicTable = mod.DynamicTable;
+      globalVars['dynamicTable'] = new DynamicTable({
         Name: ['Adam', 'Eva', 'Isaac', 'Aaron', 'Asenath'],
         Income: [19, 10, 40, 30, 50],
         Admin: [false, true, false, true, false],
