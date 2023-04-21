@@ -9,6 +9,19 @@ export class DynamicTable {
     this.index = [...Array(this.rowSize).keys()];
   }
 
+  equals(obj) {
+    if (typeof obj != typeof this) {
+      return false;
+    }
+
+    // TODO: Does not work. Loop through all the elements.
+    return (this.columns == obj.columns && this.rows == obj.rows);
+  }
+
+  static fromJSON(json) {
+    return new DynamicTable(json);
+  }
+
   constructTable(divClass) {
     const tableDiv = document.querySelector(`.${divClass}`);
     const tableElm = document.createElement('table');
