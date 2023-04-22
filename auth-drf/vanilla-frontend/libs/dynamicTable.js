@@ -7,6 +7,9 @@ export class DynamicTable {
     this.rowSize = this.rows.length;
 
     this.index = [...Array(this.rowSize).keys()];
+    for (var i = 0; i < this.rowSize; i++) {
+      this.rows[i]['Index'] = i;
+    }
 
     this.sortColumnDirection = [null, null];
   }
@@ -53,26 +56,31 @@ export class DynamicTable {
     const tableTh = document.createElement('th');
 
     tableTh.innerHTML = 'Index';
+    tableTh.id = 'Index';
     tableTr.appendChild(tableTh);
 
     this.columns.forEach((column) => {
       const tableTh = document.createElement('th');
 
       tableTh.innerHTML = column;
+      tableTh.id = column;
+      if (this.sortColumnDirection[0] == column) {
+        tableTh.innerHTML += ` (${this.sortColumnDirection[1]})`;
+      }
       tableTr.appendChild(tableTh);
     });
 
     tableElm.appendChild(tableTr);
 
-    // TODO: Create index somewhere else?
     this.index.forEach((i) => {
+      const row = this.rows[i];
+
       const tableTr = document.createElement('tr');
 
       const tableTd = document.createElement('td');
-      tableTd.innerHTML = i;
+      tableTd.innerHTML = row['Index'];
       tableTr.appendChild(tableTd);
 
-      const row = this.rows[i];
       this.columns.forEach((col) => {
         const tableTd = document.createElement('td');
         tableTd.innerHTML = row[col];
@@ -88,11 +96,10 @@ export class DynamicTable {
 
     tableDiv.querySelectorAll('th').forEach((th) => {
       th.addEventListener('click', () => {
-        console.log('click', th.innerHTML)
-        const sortColumn = th.innerHTML;
+        // TODO: Create a better sorting algorithm in seperate function.
+        const sortColumn = th.id;
         const newRows = Array.from(this.rows);
 
-        console.log(this.sortColumnDirection);
         if (this.sortColumnDirection[0] == sortColumn) {
           if (this.sortColumnDirection[1] == 'asc') {
             newRows.sort((ra, rb) => {
@@ -104,17 +111,20 @@ export class DynamicTable {
                 return 0;
               }
             });
-            this.sortColumnDirection = [sortColumn, 'desc'];
+            if (sortColumn == 'Index') {
+              this.sortColumnDirection = [null, null];
+            } else {
+              this.sortColumnDirection = [sortColumn, 'desc'];
+            }
           } else if (this.sortColumnDirection[1] == 'desc') {
-            // TODO: Sort properly on index.
             newRows.sort((ra, rb) => {
               if (ra['Index'] < rb['Index']) {
-                return 1;
-              } else if (ra['Index'] > rb['Index']) {
                 return -1;
+              } else if (ra['Index'] > rb['Index']) {
+                return 1;
               }
             });
-            this.sortColumnsDirection = [null, null];
+            this.sortColumnDirection = [null, null];
           }
         } else {
           newRows.sort((ra, rb) => {
