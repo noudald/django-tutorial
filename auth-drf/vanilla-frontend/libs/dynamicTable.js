@@ -7,6 +7,8 @@ export class DynamicTable {
     this.rowSize = this.rows.length;
 
     this.index = [...Array(this.rowSize).keys()];
+
+    this.sortColumnDirection = [null, null];
   }
 
   equals(obj) {
@@ -62,6 +64,7 @@ export class DynamicTable {
 
     tableElm.appendChild(tableTr);
 
+    // TODO: Create index somewhere else?
     this.index.forEach((i) => {
       const tableTr = document.createElement('tr');
 
@@ -86,6 +89,48 @@ export class DynamicTable {
     tableDiv.querySelectorAll('th').forEach((th) => {
       th.addEventListener('click', () => {
         console.log('click', th.innerHTML)
+        const sortColumn = th.innerHTML;
+        const newRows = Array.from(this.rows);
+
+        console.log(this.sortColumnDirection);
+        if (this.sortColumnDirection[0] == sortColumn) {
+          if (this.sortColumnDirection[1] == 'asc') {
+            newRows.sort((ra, rb) => {
+              if (ra[sortColumn] < rb[sortColumn]) {
+                return 1;
+              } else if (ra[sortColumn] > rb[sortColumn]) {
+                return -1;
+              } else {
+                return 0;
+              }
+            });
+            this.sortColumnDirection = [sortColumn, 'desc'];
+          } else if (this.sortColumnDirection[1] == 'desc') {
+            // TODO: Sort properly on index.
+            newRows.sort((ra, rb) => {
+              if (ra['Index'] < rb['Index']) {
+                return 1;
+              } else if (ra['Index'] > rb['Index']) {
+                return -1;
+              }
+            });
+            this.sortColumnsDirection = [null, null];
+          }
+        } else {
+          newRows.sort((ra, rb) => {
+            if (ra[sortColumn] < rb[sortColumn]) {
+              return -1;
+            } else if (ra[sortColumn] > rb[sortColumn]) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+          this.sortColumnDirection = [sortColumn, 'asc'];
+        }
+
+        this.rows = newRows;
+        this.constructTable(divClass);
       });
     });
 
