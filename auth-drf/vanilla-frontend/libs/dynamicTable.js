@@ -97,8 +97,8 @@ export class DynamicTable {
           const currentTr = td.parentNode;
           const currentColumnIndex = Array.from(currentTr.children).indexOf(td);
           const nextTr = currentTr.nextElementSibling;
-          td.blur()
           if (nextTr) {
+            td.blur()
             const nextTd = nextTr.children[currentColumnIndex];
             nextTd.focus();
           }
@@ -106,8 +106,8 @@ export class DynamicTable {
           const currentTr = td.parentNode;
           const currentColumnIndex = Array.from(currentTr.children).indexOf(td);
           const previousTr = currentTr.previousElementSibling;
-          td.blur();
-          if (previousTr) {
+          if (previousTr.previousElementSibling) {
+            td.blur();
             const previousTd = previousTr.children[currentColumnIndex];
             previousTd.focus();
           }
