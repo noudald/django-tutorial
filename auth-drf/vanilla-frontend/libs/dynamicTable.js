@@ -14,8 +14,29 @@ export class DynamicTable {
       return false;
     }
 
-    // TODO: Does not work. Loop through all the elements.
-    return (this.columns == obj.columns && this.rows == obj.rows);
+    if (this.columns.length != obj.columns.length) {
+      return false;
+    } else {
+      for (var i = 0; i < this.columns.length; i++) {
+        if (this.columns[i] != obj.columns[i]) {
+          return false;
+        }
+      }
+    }
+
+    if (this.rows.length != obj.rows.length) {
+      return false;
+    } else {
+      for (var i = 0; i < this.rows.length; i++) {
+        this.columns.forEach((col) => {
+          if (this.rows[i][col] != obj.rows[i][col]) {
+            return false;
+          }
+        });
+      }
+    }
+
+    return true;
   }
 
   static fromJSON(json) {

@@ -26,6 +26,16 @@ export class UnitTests {
     }
   }
 
+  assertFalse(expression, msg = null) {
+    if ((expression)) {
+      if (msg) {
+        throw new Error(`"${msg}" failed`);
+      } else {
+        throw new Error('assertFalse failed');
+      }
+    }
+  }
+
   assertEqual(value1, value2, msg = null) {
     if (value1 != value2) {
       if (msg) {
