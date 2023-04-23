@@ -46,6 +46,20 @@ export class UnitTests {
     }
   }
 
+  assertArrayEqual(arr1, arr2, msg = null) {
+    if (arr1.length != arr2.length) {
+      if (msg) {
+        throw new Error(`"${msg}" failed`);
+      } else {
+        throw new Error('assertArrayEqual failed, arrays not same length');
+      }
+    }
+
+    for (var i = 0; i < arr1.length; i++) {
+      this.assertEqual(arr1[i], arr2[i], msg);
+    }
+  }
+
   log(message, logClass = 'log') {
     const logElement = document.querySelector(`.${logClass}`);
 

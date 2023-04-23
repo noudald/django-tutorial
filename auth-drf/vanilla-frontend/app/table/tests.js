@@ -52,6 +52,16 @@ class TestDynamicTable extends UnitTests {
       'JSONified parsed test table should be equal to original table'
     );
   }
+
+  testDynamicTableFilter() {
+    testTable.filterMask.forEach((m) => this.assertTrue(m, 'Filter mask should only contain true'));
+    testTable.filter((row) => (row.a == 1));
+    this.assertArrayEqual(
+      testTable.filterMask,
+      [true, false, false, true],
+      'Filter should select all rows with a = 1'
+    );
+  }
 }
 
 
