@@ -1,7 +1,8 @@
 export class DynamicTable {
-  constructor({ columns, rows }) {
+  constructor({ columns, rows, divClass = null }) {
     this.columns = columns;
     this.rows = rows;
+    this.divClass = divClass;
 
     this.colSize = this.columns.length;
     this.rowSize = this.rows.length;
@@ -12,6 +13,7 @@ export class DynamicTable {
     }
 
     this.sortColumnDirection = [null, null];
+    this.filterMask = Array.from({length: this.rowSize}, _ => true);
   }
 
   equals(obj) {
@@ -48,7 +50,15 @@ export class DynamicTable {
     return new DynamicTable(json);
   }
 
-  constructTable(divClass, rows=this.rows) {
+  filter(filterRule) {
+    this.filterMask = this.rows.map(filterRule);
+  }
+
+  constructTable(divClass=this.divClass, rows=this.rows) {
+    if (this.divClass == null) {
+      this.divClass = divClass;
+    }
+
     const tableDiv = document.querySelector(`.${divClass}`);
     const tableElm = document.createElement('table');
 
@@ -73,6 +83,10 @@ export class DynamicTable {
     tableElm.appendChild(tableTr);
 
     this.index.forEach((i) => {
+      if (!this.filterMask[i]) {
+        return;
+      }
+
       const row = rows[i];
 
       const tableTr = document.createElement('tr');
