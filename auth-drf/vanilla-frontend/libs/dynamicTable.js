@@ -48,7 +48,7 @@ export class DynamicTable {
     return new DynamicTable(json);
   }
 
-  constructTable(divClass) {
+  constructTable(divClass, rows=this.rows) {
     const tableDiv = document.querySelector(`.${divClass}`);
     const tableElm = document.createElement('table');
 
@@ -73,7 +73,7 @@ export class DynamicTable {
     tableElm.appendChild(tableTr);
 
     this.index.forEach((i) => {
-      const row = this.rows[i];
+      const row = rows[i];
 
       const tableTr = document.createElement('tr');
 
@@ -98,7 +98,7 @@ export class DynamicTable {
       th.addEventListener('click', () => {
         // TODO: Create a better sorting algorithm in seperate function.
         const sortColumn = th.id;
-        const newRows = Array.from(this.rows);
+        const newRows = Array.from(rows);
 
         if (this.sortColumnDirection[0] == sortColumn) {
           if (this.sortColumnDirection[1] == 'asc') {
@@ -139,8 +139,7 @@ export class DynamicTable {
           this.sortColumnDirection = [sortColumn, 'asc'];
         }
 
-        this.rows = newRows;
-        this.constructTable(divClass);
+        this.constructTable(divClass, newRows);
       });
     });
 
@@ -210,12 +209,11 @@ export class DynamicTable {
 
       td.addEventListener('focusout', (e) => {
         const currentTr = td.parentNode;
+        const currentIndex = parseInt(currentTr.childNodes[0].innerHTML);
         const currentColumnIndex = Array.from(currentTr.children).indexOf(td);
         const currentColumn = this.columns[currentColumnIndex - 1];
-        const currentTable = currentTr.parentNode;
-        const currentRowIndex = Array.from(currentTable.children).indexOf(currentTr);
 
-        this.rows[currentRowIndex - 1][currentColumn] = td.innerHTML;
+        this.rows[currentIndex][currentColumn] = td.innerHTML;
       });
     });
   }
