@@ -2,7 +2,7 @@ if (!('dynamicTable' in globalVars)) {
   import('/libs/dynamicTable.js')
     .then((mod) => {
       const DynamicTable = mod.DynamicTable;
-      globalVars['dynamicTable'] = new DynamicTable({
+      const dynamicTable = new DynamicTable({
         columns: ['Name', 'Income', 'Admin'],
         rows: [
           { Name: 'Adam', Income: 20, Admin: false },
@@ -12,7 +12,9 @@ if (!('dynamicTable' in globalVars)) {
           { Name: 'Asenath', Income: 50, Admin: false },
         ],
       });
-      globalVars['dynamicTable'].constructTable('table');
+      dynamicTable.constructTable('table');
+
+      globalVars['dynamicTable'] = dynamicTable;
     });
 } else {
   globalVars['dynamicTable'].constructTable('table');
