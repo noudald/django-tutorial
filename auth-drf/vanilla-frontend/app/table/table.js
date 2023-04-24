@@ -12,24 +12,12 @@ if (!('dynamicTable' in globalVars)) {
           { Name: 'Asenath', Income: 50, Admin: false },
         ],
       });
-      dynamicTable.constructTable('table');
+      dynamicTable.construct('table');
 
       globalVars['dynamicTable'] = dynamicTable;
     });
 } else {
-  globalVars['dynamicTable'].constructTable('table');
+  globalVars['dynamicTable'].construct('table');
 }
 
-// Create a search filter even listener.
-const inputFilter = document.querySelector('#filter');
-inputFilter.addEventListener('input', () => {
-  globalVars['dynamicTable'].filter((row) => {
-    for (let [key, value] of Object.entries(row)) {
-      if (String(value).includes(inputFilter.value)) {
-        return true;
-      }
-    }
-    return false;
-  });
-  globalVars['dynamicTable'].constructTable('table');
 });

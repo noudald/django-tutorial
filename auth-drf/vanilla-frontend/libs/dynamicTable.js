@@ -54,13 +54,50 @@ export class DynamicTable {
     this.filterMask = this.rows.map(filterRule);
   }
 
-  constructTable(divClass=this.divClass, rows=this.rows) {
+  #constructSearchBar(divClass) {
+    const tableDiv = document.querySelector(`.${divClass}`);
+
+    const label = document.createElement('label');
+    label.for = 'searchBar';
+    label.innerHTML = 'Search:';
+
+    const searchBar = document.createElement('input');
+    searchBar.type = 'text';
+    searchBar.id = 'searchBar';
+    searchBar.name = 'searchBar';
+    searchBar.size = '10';
+
+    tableDiv.appendChild(label);
+    tableDiv.appendChild(searchBar);
+
+    searchBar.addEventListener('input', () => {
+      const searchBarValue = searchBar.value;
+      this.filter((row) => {
+        for (let [key, value] of Object.entries(row)) {
+          if (String(value).includes(searchBarValue)) {
+            return true;
+          }
+        }
+        return false;
+      });
+      this.#constructTable('table');
+    });
+  }
+
+  #constructTable(divClass=this.divClass, rows=this.rows) {
     if (this.divClass == null) {
       this.divClass = divClass;
     }
 
     const tableDiv = document.querySelector(`.${divClass}`);
-    const tableElm = document.createElement('table');
+    let tableElm = tableDiv.querySelector(`#${divClass}Table`);
+    if (tableElm) {
+      tableElm.innerHTML = '';
+    } else {
+      tableElm = document.createElement('table');
+      tableElm.id = `${divClass}Table`;
+      tableDiv.appendChild(tableElm);
+    }
 
     const tableTr = document.createElement('tr');
     const tableTh = document.createElement('th');
@@ -105,10 +142,7 @@ export class DynamicTable {
       tableElm.appendChild(tableTr);
     });
 
-    tableDiv.innerHTML = '';
-    tableDiv.appendChild(tableElm);
-
-    tableDiv.querySelectorAll('th').forEach((th) => {
+    tableElm.querySelectorAll('th').forEach((th) => {
       th.addEventListener('click', () => {
         // TODO: Create a better sorting algorithm in seperate function.
         const sortColumn = th.id;
@@ -153,11 +187,11 @@ export class DynamicTable {
           this.sortColumnDirection = [sortColumn, 'asc'];
         }
 
-        this.constructTable(divClass, newRows);
+        this.#constructTable(divClass, newRows);
       });
     });
 
-    tableDiv.querySelectorAll('td').forEach((td) => {
+    tableElm.querySelectorAll('td').forEach((td) => {
       td.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === 'ArrowDown') {
           e.preventDefault();
@@ -217,7 +251,6 @@ export class DynamicTable {
               selection.addRange(range);
             }
           }
-
         }
       });
 
@@ -230,5 +263,10 @@ export class DynamicTable {
         this.rows[currentIndex][currentColumn] = td.innerHTML;
       });
     });
+  }
+
+  construct(divClass) {
+    this.#constructSearchBar(divClass);
+    this.#constructTable(divClass);
   }
 }
