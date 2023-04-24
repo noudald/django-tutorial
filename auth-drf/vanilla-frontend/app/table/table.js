@@ -20,3 +20,16 @@ if (!('dynamicTable' in globalVars)) {
   globalVars['dynamicTable'].constructTable('table');
 }
 
+// Create a search filter even listener.
+const inputFilter = document.querySelector('#filter');
+inputFilter.addEventListener('input', () => {
+  globalVars['dynamicTable'].filter((row) => {
+    for (let [key, value] of Object.entries(row)) {
+      if (String(value).includes(inputFilter.value)) {
+        return true;
+      }
+    }
+    return false;
+  });
+  globalVars['dynamicTable'].constructTable('table');
+});
