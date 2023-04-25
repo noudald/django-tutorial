@@ -275,8 +275,85 @@ export class DynamicTable {
     });
   }
 
+  constructAddRowModal(divClass) {
+    const tableDiv = document.querySelector(`.${divClass}`);
+
+    const modalDiv = document.createElement('div');
+    modalDiv.classList.add('modal');
+    modalDiv.classList.add('hide');
+    modalDiv.style.display = 'none';
+
+    const modalTable = document.createElement('table');
+
+    this.columns.forEach((column) => {
+      const modalTr = document.createElement('tr');
+
+      const modalTd1 = document.createElement('td');
+      modalTd1.align = 'right';
+      modalTd1.innerHTML = column;
+
+      const modalTd2 = document.createElement('td');
+      modalTd2.align = 'left';
+      const modalInput = document.createElement('input');
+      modalInput.type = 'text';
+      modalInput.id = 'input' + column;
+      modalTd2.appendChild(modalInput);
+
+      modalTr.appendChild(modalTd1);
+      modalTr.appendChild(modalTd2);
+      modalTable.appendChild(modalTr);
+    });
+
+    modalDiv.appendChild(modalTable);
+
+    const modalAddRowButton = document.createElement('button');
+    modalAddRowButton.id = 'modalAddRowButton';
+    modalAddRowButton.innerHTML = 'Add Row';
+
+    modalDiv.appendChild(modalAddRowButton);
+
+    const modalCloseButton = document.createElement('button');
+    modalCloseButton.id = 'modalCloseButton';
+    modalCloseButton.innerHTML = 'Close Modal';
+
+    modalDiv.appendChild(modalCloseButton);
+
+    tableDiv.appendChild(modalDiv);
+
+    const modalOpenButton = document.createElement('button');
+    modalOpenButton.id = 'modalOpenButton';
+    modalOpenButton.innerHTML = 'Open Modal';
+
+    tableDiv.appendChild(modalOpenButton);
+
+    modalOpenButton.addEventListener('click', () => {
+      modalDiv.classList.replace('hide', 'show');
+      modalDiv.style.display = 'block';
+    });
+
+    modalCloseButton.addEventListener('click', () => {
+      modalDiv.classList.replace('show', 'hide');
+      setTimeout(() => { modalDiv.style.display = 'none'; }, 400);
+    });
+
+    modalAddRowButton.addEventListener('click', () => {
+      const input = {};
+      this.columns.forEach((column) => {
+        const value = document.querySelector(`#input${column}`).value;
+        input[column] = value;
+      });
+      this.addRow(input);
+
+      modalDiv.classList.replace('show', 'hide');
+      setTimeout(() => { modalDiv.style.display = 'none'; }, 400);
+
+      this.constructTable(divClass);
+    });
+  }
+
   construct(divClass) {
     this.constructSearchBar(divClass);
     this.constructTable(divClass);
+    this.constructAddRowModal(divClass);
   }
 }
