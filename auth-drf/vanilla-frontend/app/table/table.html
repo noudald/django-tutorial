@@ -1,3 +1,75 @@
 <h1>Dynamic table</h1>
 
 <div class="table"></div>
+
+<div class="modal hide">
+    <table>
+        <tr>
+            <td align="right"><label for="name">Full Name:</label></td>
+            <td align="left"><input type="text" id="name"></td>
+        </tr>
+        <tr>
+            <td align="right"><label for="income">Income:</label></td>
+            <td align="left"><input type="number" step="1" id="income"></td>
+        </tr>
+        <tr>
+            <td align="right"><label for="admin">Admin:</label></td>
+            <td align="left"><select id="admin">
+                    <option value="false">False</option>
+                    <option value="true">True</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <button id="addRowButton">Add Row</button>
+    <button id="modalCloseButton">Close</button>
+</div>
+
+<button id="modalOpenButton">Open Modal</button>
+
+<style>
+.modal {
+    position: fixed;
+    z-index: 1; // ?
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.show {
+    -webkit-animation-name: fadeIn;
+    -webkit-animation-duration: 0.4s;
+    animation-name: fadeIn;
+    animation-duration: 0.4s;
+}
+
+.hide {
+    -webkit-animation-name: fadeOut;
+    -webkit-animation-duration: 0.4s;
+    animation-name: fadeOut;
+    animation-duration: 0.4s;
+}
+
+@-webkit-keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@-webkit-keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+</style>

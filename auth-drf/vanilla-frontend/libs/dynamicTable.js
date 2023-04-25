@@ -54,7 +54,16 @@ export class DynamicTable {
     this.filterMask = this.rows.map(filterRule);
   }
 
-  #constructSearchBar(divClass) {
+  addRow(row) {
+    // TODO: Validate row.
+    row.Index = this.rowSize;
+    this.rows.push(row);
+    this.index.push(this.rowSize);
+    this.filterMask.push(true);
+    this.rowSize += 1;
+  }
+
+  constructSearchBar(divClass) {
     const tableDiv = document.querySelector(`.${divClass}`);
 
     const label = document.createElement('label');
@@ -80,11 +89,12 @@ export class DynamicTable {
         }
         return false;
       });
-      this.#constructTable('table');
+      this.constructTable('table');
     });
   }
 
-  #constructTable(divClass=this.divClass, rows=this.rows) {
+  constructTable(divClass=this.divClass, rows=this.rows) {
+    console.log('Construct table', divClass);
     if (this.divClass == null) {
       this.divClass = divClass;
     }
@@ -187,7 +197,7 @@ export class DynamicTable {
           this.sortColumnDirection = [sortColumn, 'asc'];
         }
 
-        this.#constructTable(divClass, newRows);
+        this.constructTable(divClass, newRows);
       });
     });
 
@@ -266,7 +276,7 @@ export class DynamicTable {
   }
 
   construct(divClass) {
-    this.#constructSearchBar(divClass);
-    this.#constructTable(divClass);
+    this.constructSearchBar(divClass);
+    this.constructTable(divClass);
   }
 }
