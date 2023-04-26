@@ -26,6 +26,7 @@ const routerPages = {
     title: 'Dynamic Table',
     urlContainer: '/app/table/table.html',
     jsFiles: ['/app/table/table.js'],
+    cssFiles: ['/libs/modal.css'],
     needAuthentication: false,
   }
 };
