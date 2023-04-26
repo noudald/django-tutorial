@@ -1,6 +1,8 @@
 export class DynamicTable {
   // TODO: Introduce different input types. E.g., string, integer, options, ...
   // TODO: Create edit button + modal for elements in table.
+  // TODO: Use client-side web APIs to generate the tables.
+  // TODO: Bind divClass class instead of method parameter.
   constructor({ columns, rows, divClass = null }) {
     this.columns = columns;
     this.rows = rows;
