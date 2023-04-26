@@ -2,9 +2,14 @@
 
 export class Authenticator {
   constructor() {
-    this.isAuthenticated = false;
-    this.token = '';
-    this.expiry = '';
+    this.token = localStorage['token'];
+    this.expiry = localStorage['expiry'];
+
+    if (this.token) {
+      this.isAuthenticated = true;
+    } else {
+      this.isAuthenticated = false;
+    }
 
     this.username = null;
     this.email = null;
@@ -116,9 +121,8 @@ export class Authenticator {
         this.token = data.token;
         this.expiry = data.expiry;
 
-        sessionStorage.setItem('isAuthenticated', this.isAuthenticated);
-        sessionStorage.setItem('token', this.token);
-        sessionStorage.setItem('expiry', this.expiry);
+        localStorage.setItem('token', this.token);
+        localStorage.setItem('expiry', this.expiry);
 
         return {
           'status': true,
