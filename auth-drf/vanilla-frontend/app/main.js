@@ -28,6 +28,11 @@ const routerPages = {
     jsFiles: ['/app/table/table.js'],
     cssFiles: ['/libs/modal.css'],
     needAuthentication: false,
+  },
+  lorumipsum: {
+    title: 'Lorum Ipsum',
+    urlContainer: '/app/lorum/ipsum.html',
+    needAuthentication: true,
   }
 };
 
@@ -45,6 +50,10 @@ const navBar = new NavBar(routerPages, { elementHTMLNavBar: 'navbar' });
 
 
 const hashValue = window.location.hash.substring(1);
-router.navigate(hashValue);
+if (hashValue == '') {
+  router.navigate('helloworld');
+} else {
+  router.navigate(hashValue);
+}
 
 

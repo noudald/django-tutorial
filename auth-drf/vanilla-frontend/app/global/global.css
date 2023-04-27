@@ -1,0 +1,10 @@
+body {
+    max-width: 800px;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+p {
+    margin-bottom: 10px;
+}
